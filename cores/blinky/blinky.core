@@ -1,0 +1,37 @@
+CAPI=2:
+
+name: ::blinky:0
+
+filesets:
+  rtl:
+    files:
+      - blinky.v: {file_type: verilogSource}
+
+  tb:
+    files:
+      - blinky_tb.v: {file_type: verilogSource}
+
+  top:
+    files:
+      - blinky_top.v: {file_type: verilogSource}
+
+  quartus_files:
+    files:
+      - pinmap.tcl: {file_type: tclSource}
+      - options.tcl: {file_type: tclSource}
+      - blinky.sdc: {file_type: sdcSource}
+
+targets:
+  sim:
+    default_tool: icarus
+    filesets: [rtl, tb]
+    toplevel: [blinky_tb]
+
+  synth:
+    default_tool: quartus
+    filesets: [rtl, top, quartus_files]
+    toplevel: [blinky_top]
+    tools:
+      quartus:
+        family: "Cyclone IV E"
+        device: EP4CE22F17C6
