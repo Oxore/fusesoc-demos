@@ -1,0 +1,63 @@
+CAPI=2:
+
+name: ::plights:0
+
+filesets:
+  rtl:
+    depend:
+      - gpio
+      - wb_ram
+      - wb_intercon
+    files:
+      - bus.v
+      - bus.vh: {is_include_file: true}
+      - divider.v
+      - mapper.v
+      - mem.hex: {is_include_file: true, copyto: mem.hex}
+      - plights.v
+    file_type: verilogSource
+
+  tb:
+    files:
+      - plights_tb.v
+    file_type: verilogSource
+
+  divider_tb:
+    files:
+      - divider_tb.v
+    file_type: verilogSource
+
+  top:
+    files:
+      - plights_top.v
+    file_type: verilogSource
+
+  quartus_files:
+    files:
+      - pinmap.tcl: {file_type: tclSource}
+      - options.tcl: {file_type: tclSource}
+      - plights.sdc: {file_type: sdcSource}
+
+targets:
+  default:
+    default_tool: icarus
+    filesets: [rtl]
+
+  sim:
+    default_tool: icarus
+    filesets: [rtl, tb]
+    toplevel: [plights_tb]
+
+  test_div:
+    default_tool: icarus
+    filesets: [rtl, divider_tb]
+    toplevel: [divider_tb]
+
+  synth:
+    default_tool: quartus
+    filesets: [rtl, top, quartus_files]
+    toplevel: [plights_top]
+    tools:
+      quartus:
+        family: "Cyclone IV E"
+        device: EP4CE22F17C6

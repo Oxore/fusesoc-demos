@@ -17,13 +17,14 @@ module blinky_tb;
    initial begin
       @(blinky);
       last_edge = $time;
-      for (i=0; i<10;i=i+1) begin
+      for (i = 0; i < 10; i = i + 1)
+      begin
          @(blinky);
-         if (($time-last_edge) != 1_000_000_000) begin
+         if (($time - last_edge) != 1_000_000_000) begin
             $display("Error! Length of pulse was %0d ns", $time-last_edge);
             $finish;
          end else
-            $display("Pulse %0d/10 OK!", i+1);
+            $display("Pulse %0d/10 OK!", i + 1);
 
          last_edge = $time;
       end
