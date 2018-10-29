@@ -1,6 +1,7 @@
 # My own FuseSoC related DE0\_Nano FPGA Kit specific demos
 
 ## Usage
+
 Clone this repository:
 
 ```
@@ -28,15 +29,15 @@ fusesoc run --target=synth blinky
 
 ## Cores
 
-There are following examples:
+There are following examples with targets:
 
 - `blinky` - blinking LED example
   - `sim` - Run tests using icarus verilog.
   - `synth` - Build and run on DE0\_Nano via Quartus.
-- `plights` ***(unimplemented)*** - Wishbone master example: pea lights.
-  - `sim` ***(unimplemented)*** - Run tests using icarus verilog.
+- `plights` - Wishbone master example: pea lights.
+  - `sim` - Run tests using icarus verilog.
   - `test_div` - Run `divider.v` module tests using icarus verilog.
-  - `synth` ***(unimplemented)*** - Build and run on DE0\_Nano via Quartus.
+  - `synth` - Build and run on DE0\_Nano via Quartus.
 
 ---
 

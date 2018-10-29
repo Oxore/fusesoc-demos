@@ -1,8 +1,9 @@
 module mapper
 #(
-   parameter addr_in_start = 32'hF0000110,
-   parameter addr_in_end   = 32'hF0000008,
-   parameter addr_out      = 32'h91000000
+   parameter addr_in_start  = 32'h08000000,
+   parameter addr_in_end    = addr_in_start + 4 * (10 - 1),
+   parameter addr_out_start = 32'h91000000,
+   parameter addr_out_end   = addr_out_start + 1
 )
 (
    input             wb_clk,
@@ -20,38 +21,86 @@ module mapper
    output reg  [1:0] wb_bte_o = 0,
    output            wb_stb_o
 );
+   localparam READ_STEP = 4;
+
+   localparam READ_ROM = 0;
+   localparam WRITE_LED = 1;
+
    localparam IDLE = 0;
    localparam REQ = 1;
-   localparam WAIT = 2;
 
-   reg [31:0] addr = addr_out;
-   reg  [1:0] state = IDLE;
-   reg [31:0] data;
+   reg        rw_cycle = READ_ROM;
+   reg        state = IDLE;
+   reg [31:0] data = 0;
+   reg [31:0] addr_read = addr_in_start;
+   reg [31:0] addr_write = addr_out_start;
 
-   assign wb_cyc_o = ^(state);
-   assign wb_stb_o = state[0] & ~state[1];
-   assign wb_we_o = 0;
+   assign  wb_cyc_o = state;
+   assign  wb_stb_o = state;
+   assign  wb_we_o  = state & rw_cycle;
+   initial wb_adr_o = addr_in_start;
 
    always @(posedge wb_clk)
    begin
       if (wb_rst)
       begin
          state <= IDLE;
-         addr <= addr_out;
+         rw_cycle <= READ_ROM;
+         addr_read <= addr_in_start;
+         addr_write <= addr_out_start;
+         wb_adr_o <= addr_in_start;
+         wb_dat_o <= 0;
+         data <= 0;
       end
       else
       begin
          if ((state == IDLE) && !wb_rty_i)
          begin
             state <= REQ;
+
+            if (rw_cycle == WRITE_LED)
+            begin
+               wb_dat_o <= data;
+               wb_sel_o[3:2] <= {~wb_adr_o[0], wb_adr_o[0]};
+            end
+            else
+            begin
+               wb_sel_o <= 4'b0;
+            end
          end
 
          if (state == REQ)
          begin
             if (wb_ack_i)
             begin
-               data <= wb_dat_i;
                state <= IDLE;
+
+               if (rw_cycle == READ_ROM)
+               begin
+                  data <= wb_dat_i;
+
+                  if (addr_read >= addr_in_end)
+                     addr_read <= addr_in_start;
+                  else
+                     addr_read <= addr_read + READ_STEP;
+
+                  rw_cycle <= WRITE_LED;
+                  wb_adr_o <= addr_write;
+               end
+               else
+               begin
+                  if (addr_write == addr_out_end)
+                  begin
+                     addr_write <= addr_out_start;
+                     rw_cycle <= READ_ROM;
+                     wb_adr_o <= addr_read;
+                  end
+                  else
+                  begin
+                     addr_write <= addr_write + 1;
+                     wb_adr_o <= addr_write + 1;
+                  end
+               end
             end
          end
       end

@@ -5,11 +5,11 @@ module plights_tb;
 
    reg         clk = 1'b1;
    reg         rst = 1'b0;
-   wire [7:0]  led;
+   inout [7:0] led;
 
    always #clk_half_period clk <= !clk;
 
-   plights #(.div (div))
+   plights
    dut (
       .clk  (clk),
       .rst  (rst),
@@ -17,7 +17,6 @@ module plights_tb;
    );
 
    integer i;
-   time last_edge = 0;
 
    initial
    begin

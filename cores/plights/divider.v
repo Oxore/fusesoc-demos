@@ -1,3 +1,8 @@
+/*
+ * This clock divider does not work correctly on a real FPGA for some reason
+ * but works perfectly in icarus verilog
+ *
+ * */
 module divider
 #(
    parameter div = 1

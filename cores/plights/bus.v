@@ -55,8 +55,8 @@ wire        wb_s2m_resize_gpio0_rty;
 
 wb_mux
   #(.num_slaves (2),
-    .MATCH_ADDR ({32'h91000000, 32'hf0000000}),
-    .MATCH_MASK ({32'hfffffffe, 32'hffffff00}))
+    .MATCH_ADDR ({32'h91000000, 32'h08000000}),
+    .MATCH_MASK ({32'hfffffffe, 32'hffffe0c0}))
  wb_mux_mapper0
    (.wb_clk_i  (wb_clk_i),
     .wb_rst_i  (wb_rst_i),
