@@ -55,7 +55,9 @@ It would be much intuitive if it was like this:
 
 ## Memory mapping
 
-There is a strange thing while specifying size in [`wb_intercon_1.2.1`](https://github.com/olofk/wb_intercon).
+~~There is a strange thing while specifying size in [`wb_intercon_1.2.1`](https://github.com/olofk/wb_intercon).
 For instance, `size=80` produces a right mask, but sets `err` to `high` after accessing address `base+0x10`.
 Setting `size=8000` allows addresses up to `base+0x80`.
-Probably a bug in `wb_mux.v`.
+Probably a bug in `wb_mux.v`.~~
+
+A `size` value for slave specified in `wb_intercon.conf` must be power of two, i.e. `2`, `4`, `8`, `16` and so on.

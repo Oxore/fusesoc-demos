@@ -9,35 +9,35 @@ filesets:
       - wb_ram
       - wb_intercon
     files:
-      - bus.v
-      - bus.vh: {is_include_file: true}
-      - mapper.v
-      - mem.hex: {is_include_file: true, copyto: mem.hex}
-      - plights.v
+      - rtl/verilog/bus.v
+      - rtl/verilog/bus.vh: {is_include_file: true}
+      - rtl/verilog/mapper.v
+      - data/mem.hex: {is_include_file: true, copyto: mem.hex}
+      - rtl/verilog/plights.v
     file_type: verilogSource
 
   tb:
     files:
-      - plights_tb.v
+      - bench/verilog/plights_tb.v
     file_type: verilogSource
 
   divider_tb:
     files:
-      - divider.v
-      - divider_tb.v
+      - rtl/verilog/divider.v
+      - bench/verilog/divider_tb.v
     file_type: verilogSource
 
   top:
     files:
-      - plights_top.v
-      - divider2.v
+      - rtl/verilog/plights_top.v
+      - rtl/verilog/divider2.v
     file_type: verilogSource
 
   quartus_files:
     files:
-      - pinmap.tcl: {file_type: tclSource}
-      - options.tcl: {file_type: tclSource}
-      - plights.sdc: {file_type: sdcSource}
+      - data/pinmap.tcl: {file_type: tclSource}
+      - data/options.tcl: {file_type: tclSource}
+      - data/plights.sdc: {file_type: sdcSource}
 
 targets:
   sim:
