@@ -8,7 +8,6 @@ Every master and slave device must be clocked the same way as the bus itself, i.
 In a simple case the master's `wb_cti_o` output should always be set to `000`, if burst mode is not used.
 
 In a simple case for every transaction it is mandatory for the master to set `wb_stb_o` and `wb_cyc_o` to `high` and wait for the slave setting `wb_ack_i` to `high`, which means the end of transaction.
-`wb_stb_o` and `wb_cyc_o` may be set to `low`.
 
 If `wb_we_o` was set alongside with `wb_stb_o` and `wb_cyc_o` to `high`, then a write transaction performed.
 Otherwise a read transaction performed.
