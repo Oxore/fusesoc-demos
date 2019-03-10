@@ -15,6 +15,18 @@ module wb_dbus
     output        wb_mor1kx0_d_ack_o,
     output        wb_mor1kx0_d_err_o,
     output        wb_mor1kx0_d_rty_o,
+    output [31:0] wb_ram0_adr_o,
+    output [31:0] wb_ram0_dat_o,
+    output  [3:0] wb_ram0_sel_o,
+    output        wb_ram0_we_o,
+    output        wb_ram0_cyc_o,
+    output        wb_ram0_stb_o,
+    output  [2:0] wb_ram0_cti_o,
+    output  [1:0] wb_ram0_bte_o,
+    input  [31:0] wb_ram0_dat_i,
+    input         wb_ram0_ack_i,
+    input         wb_ram0_err_i,
+    input         wb_ram0_rty_i,
     output [31:0] wb_gpio0_adr_o,
     output  [7:0] wb_gpio0_dat_o,
     output  [3:0] wb_gpio0_sel_o,
@@ -42,9 +54,9 @@ wire        wb_s2m_resize_gpio0_err;
 wire        wb_s2m_resize_gpio0_rty;
 
 wb_mux
-  #(.num_slaves (1),
-    .MATCH_ADDR ({32'h91000000}),
-    .MATCH_MASK ({32'hfffffffe}))
+  #(.num_slaves (2),
+    .MATCH_ADDR ({32'h20000000, 32'h91000000}),
+    .MATCH_MASK ({32'hffffe000, 32'hfffffffe}))
  wb_mux_mor1kx0_d
    (.wb_clk_i  (wb_clk_i),
     .wb_rst_i  (wb_rst_i),
@@ -60,18 +72,18 @@ wb_mux
     .wbm_ack_o (wb_mor1kx0_d_ack_o),
     .wbm_err_o (wb_mor1kx0_d_err_o),
     .wbm_rty_o (wb_mor1kx0_d_rty_o),
-    .wbs_adr_o ({wb_m2s_resize_gpio0_adr}),
-    .wbs_dat_o ({wb_m2s_resize_gpio0_dat}),
-    .wbs_sel_o ({wb_m2s_resize_gpio0_sel}),
-    .wbs_we_o  ({wb_m2s_resize_gpio0_we}),
-    .wbs_cyc_o ({wb_m2s_resize_gpio0_cyc}),
-    .wbs_stb_o ({wb_m2s_resize_gpio0_stb}),
-    .wbs_cti_o ({wb_m2s_resize_gpio0_cti}),
-    .wbs_bte_o ({wb_m2s_resize_gpio0_bte}),
-    .wbs_dat_i ({wb_s2m_resize_gpio0_dat}),
-    .wbs_ack_i ({wb_s2m_resize_gpio0_ack}),
-    .wbs_err_i ({wb_s2m_resize_gpio0_err}),
-    .wbs_rty_i ({wb_s2m_resize_gpio0_rty}));
+    .wbs_adr_o ({wb_ram0_adr_o, wb_m2s_resize_gpio0_adr}),
+    .wbs_dat_o ({wb_ram0_dat_o, wb_m2s_resize_gpio0_dat}),
+    .wbs_sel_o ({wb_ram0_sel_o, wb_m2s_resize_gpio0_sel}),
+    .wbs_we_o  ({wb_ram0_we_o, wb_m2s_resize_gpio0_we}),
+    .wbs_cyc_o ({wb_ram0_cyc_o, wb_m2s_resize_gpio0_cyc}),
+    .wbs_stb_o ({wb_ram0_stb_o, wb_m2s_resize_gpio0_stb}),
+    .wbs_cti_o ({wb_ram0_cti_o, wb_m2s_resize_gpio0_cti}),
+    .wbs_bte_o ({wb_ram0_bte_o, wb_m2s_resize_gpio0_bte}),
+    .wbs_dat_i ({wb_ram0_dat_i, wb_s2m_resize_gpio0_dat}),
+    .wbs_ack_i ({wb_ram0_ack_i, wb_s2m_resize_gpio0_ack}),
+    .wbs_err_i ({wb_ram0_err_i, wb_s2m_resize_gpio0_err}),
+    .wbs_rty_i ({wb_ram0_rty_i, wb_s2m_resize_gpio0_rty}));
 
 wb_data_resize
   #(.aw  (32),
