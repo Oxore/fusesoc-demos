@@ -1,0 +1,12 @@
+diff --git a/picorv32.core b/picorv32.core
+index 08ee704..fcf16c3 100644
+--- a/picorv32.core
++++ b/picorv32.core
+@@ -39,7 +39,6 @@ targets:
+       
+     tools:
+       verilator :
+-        cli_parser : fusesoc
+         mode : cc
+         verilator_options : [-Wno-fatal, --trace]
+   test_ez:

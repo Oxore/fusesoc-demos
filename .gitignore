@@ -1,3 +1,8 @@
 build/
 fusesoc.conf
 *.vim
+*.elf
+*.o
+*.bin
+*.a
+*.so

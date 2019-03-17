@@ -1,5 +1,5 @@
 `timescale 1ns/1ns
-module or_sopc_tb;
+module rv_sopc_tb;
    parameter div = 2;
    localparam clk_half_period = div * 5;
 
@@ -9,7 +9,7 @@ module or_sopc_tb;
 
    always #clk_half_period clk <= !clk;
 
-   or_sopc
+   rv_sopc
    dut (
       .clk  (clk),
       .rst  (rst),
@@ -20,7 +20,7 @@ module or_sopc_tb;
 
    initial
    begin
-      $dumpfile("or_sopc.vcd");
+      $dumpfile("testbench.vcd");
       $dumpvars;
       #100
       rst <= 1'b1;

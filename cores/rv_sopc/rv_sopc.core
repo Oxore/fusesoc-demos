@@ -1,7 +1,7 @@
 CAPI=2:
 
 name: ::rv_sopc:0
-description: An OpenRisc system on programmable chip example
+description: RISC V system on programmable chip example
 
 filesets:
   rtl:
@@ -12,17 +12,14 @@ filesets:
       - picorv32
     files:
       - data/mem.hex: {is_include_file: true, copyto: mem.hex}
-      - rtl/verilog/dbus.v
-      - rtl/verilog/dbus.vh: {is_include_file: true}
-      - rtl/verilog/ibus.v
-      - rtl/verilog/ibus.vh: {is_include_file: true}
+      - rtl/verilog/bus.v
+      - rtl/verilog/bus.vh: {is_include_file: true}
       - rtl/verilog/rv_sopc.v
     file_type: verilogSource
 
   tb:
     files:
       - bench/verilog/rv_sopc_tb.v
-      - bench/verilog/test-defines.v: {is_include_file: true}
     file_type: verilogSource
 
 targets:
