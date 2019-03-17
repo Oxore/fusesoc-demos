@@ -42,7 +42,7 @@ There are the following examples with the targets:
 - `rv_sopc` - Basic RISCV sopc with gpio.
   - `sim` - Run tests using icarus verilog. Patch `picorv32` submodule before.
   - `synth` - Build and run on DE0\_Nano via Quartus.
-  running (see [description](#RISC_V_SOPC)).
+  running (see [description](#risc-v-sopc)).
 
 ### Blinky
 
