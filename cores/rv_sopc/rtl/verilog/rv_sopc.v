@@ -1,5 +1,5 @@
 module rv_sopc #(
-   parameter ROM_DEPTH = 4 * 1000
+   parameter ROM_DEPTH = 4 * 'h4000
 )
 (
    input          clk,
@@ -9,10 +9,18 @@ module rv_sopc #(
 
 wire wb_clk;
 wire wb_rst;
+reg [31:0] irq;
 
 assign wb_clk = clk;
 assign wb_rst = rst;
 assign wb_m2s_picorv320_cti[2:0] = 3'b000;
+
+always @* begin
+   irq = 0;
+   irq[4] = &picorv320.picorv32_core.count_cycle[12:0];
+   irq[5] = &picorv320.picorv32_core.count_cycle[15:0];
+end
+
 
 `include "bus.vh"
 
@@ -26,7 +34,7 @@ picorv32_wb #(
 picorv320 (
    .wb_clk_i   (wb_clk),
    .wb_rst_i   (wb_rst),
-   .irq        (32'b0),
+   .irq        (irq),
 
    .wbm_adr_o  (wb_m2s_picorv320_adr),
    .wbm_dat_o  (wb_m2s_picorv320_dat),

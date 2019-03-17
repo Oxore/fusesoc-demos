@@ -6,9 +6,9 @@ OBJCOPY:=$(CROSSDEV)objcopy
 OBJDUMP:=$(CROSSDEV)objdump
 
 SOURCES+=main.c
-#SOURCES+=startup.s
-OBJECTS:=$(patsubst %.c,%.c.o,$(SOURCES))
-OBJECTS:=$(patsubst %.s,%.s.o,$(OBJECTS))
+SOURCES+=irq.c
+SOURCES+=start.S
+OBJECTS:=$(patsubst %,%.o,$(SOURCES))
 
 LDFLAGS+=-Tmain.ld
 
@@ -16,26 +16,37 @@ CFLAGS+=-g
 
 MAIN=main
 
-all:$(MAIN).elf
-all:$(MAIN).bin
+MEM=mem.hex
+
+all: $(MAIN).elf
+all: $(MAIN).bin
+all: mem.hex
+
+$(MEM): $(MAIN).bin
+	@echo -e "  HEXDUMP $@"
+	@hexdump -v -e '4/1 "%02x "' -e '"\n"' $< | awk '{print $$4$$3$$2$$1}' >$@
 
 $(MAIN).elf: $(OBJECTS)
-	@echo "  LD      $@"
+	@echo -e "  LD      $@"
 	$(Q) $(LD) $^ -o $@ $(LDFLAGS)
 
 $(MAIN).bin: $(MAIN).elf
-	@echo "  OBJCOPY $@"
+	@echo -e "  OBJCOPY $@"
 	$(Q) $(OBJCOPY) -O binary $< $@
 
 %.s.o: %.s
-	@echo "  CC      $@"
+	@echo -e "  CC      $@"
+	$(Q) $(CC) -c $< -o $@ $(CFLAGS)
+
+%.S.o: %.S
+	@echo -e "  CC      $@"
 	$(Q) $(CC) -c $< -o $@ $(CFLAGS)
 
 %.c.o: %.c
-	@echo "  CC      $@"
+	@echo -e "  CC      $@"
 	$(Q) $(CC) -c $< -o $@ $(CFLAGS)
 
 clean:
-	@rm -rfv $(OBJECTS) $(MAIN).elf $(MAIN).bin
+	@rm -rfv $(OBJECTS) $(MAIN).elf $(MAIN).bin $(MEM)
 
 .PHONY: clean

@@ -11,7 +11,7 @@ filesets:
       - wb_intercon
       - picorv32
     files:
-      - data/mem.hex: {is_include_file: true, copyto: mem.hex}
+      - data/sw/mem.hex: {is_include_file: true, copyto: mem.hex}
       - rtl/verilog/bus.v
       - rtl/verilog/bus.vh: {is_include_file: true}
       - rtl/verilog/rv_sopc.v

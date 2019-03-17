@@ -1,18 +1,23 @@
 MEMORY
 {
-    ram (rx) : ORIGIN = 0x00000000, LENGTH = 0x1000
+    ram (rx) : ORIGIN = 0x00000000, LENGTH = 0x10000
 }
 
-_reset_handler_pos = 0x0;
+/* _reset_handler_pos = 0x0; */
 
+ENTRY(main);
 SECTIONS
 {
-    .reset_handler _reset_handler_pos : {
-        *(.reset_handler*)
-    } > ram
+    /*
+     * .reset_handler _reset_handler_pos : {
+     *     *(.reset_handler*)
+     * } > ram
+     *
+     * */
 
     .text : {
-        *(.text);
+        start.S.o;
+        *(.text*);
         __ROM_AT = .;
     } > ram
 

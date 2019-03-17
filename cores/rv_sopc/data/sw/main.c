@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#define LOCATE_RST  __attribute__((__section__(".reset_handler")))
+//#define LOCATE_RST  __attribute__((__section__(".reset_handler")))
 
 char* gpio_base = (char*) 0x91000000;
 
@@ -36,7 +36,7 @@ int main(void)
   return 0;
 }
 
-void LOCATE_RST reset_handler(void)
-{
-    (void)main();
-}
+//void LOCATE_RST reset_handler(void)
+//{
+//    (void)main();
+//}
