@@ -1,11 +1,10 @@
 MEMORY
 {
-    ram (rx) : ORIGIN = 0x00000000, LENGTH = 0x10000
+    ram (rwx) : ORIGIN = 0x00000000, LENGTH = 0x4000
 }
 
 /* _reset_handler_pos = 0x0; */
 
-ENTRY(main);
 SECTIONS
 {
     /*

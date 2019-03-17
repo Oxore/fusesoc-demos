@@ -2,20 +2,22 @@
 
 //#define LOCATE_RST  __attribute__((__section__(".reset_handler")))
 
-char* gpio_base = (char*) 0x91000000;
+#define GPIO0_BASE  0x91000000
+#define GPIO0_DIR   (GPIO0_BASE + 0)
+#define GPIO0_DATA  (GPIO0_BASE + 1)
 
-unsigned char dat = 0x00;
+volatile unsigned char dat = 0x00;
 
 static void gpio_init() {
   /* Set the GPIO to all out */
   char dir = 0xff;
-  *(gpio_base+1) = dir;
+  *(uint8_t *)GPIO0_DIR = dir;
   /* Initialise with the first data value */
-  *(gpio_base+0) = dat;
+  *(uint8_t *)GPIO0_DATA = dat;
 }
 
 static void gpio_increment() {
-  *(gpio_base+0) = (++dat)%256;
+  *(uint8_t *)GPIO0_DATA = (++dat)%256;
 }
 
 int main(void)

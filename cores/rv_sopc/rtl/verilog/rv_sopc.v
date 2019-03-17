@@ -1,5 +1,5 @@
 module rv_sopc #(
-   parameter ROM_DEPTH = 4 * 'h4000
+   parameter ROM_DEPTH = 'h4000
 )
 (
    input          clk,
@@ -42,12 +42,8 @@ picorv320 (
    .wbm_we_o   (wb_m2s_picorv320_we),
    .wbm_cyc_o  (wb_m2s_picorv320_cyc),
    .wbm_stb_o  (wb_m2s_picorv320_stb),
-   //.wbm_cti_o  (wb_m2s_picorv320_cti),
-   //.wbm_bte_o  (wb_m2s_picorv320_bte),
    .wbm_dat_i  (wb_s2m_picorv320_dat),
    .wbm_ack_i  (wb_s2m_picorv320_ack)
-   //.wbm_err_i  (wb_s2m_picorv320_err),
-   //.wbm_rty_i  (wb_s2m_picorv320_rty),
 );
 
 gpio gpio0 (

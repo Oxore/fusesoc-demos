@@ -329,10 +329,15 @@ irq_stack:
  **********************************/
 
 start:
-	/* zero-initialize all registers */
 
-	addi x1, zero, 0
-	addi x2, zero, 0
+  /* setting stack pointer to 0x4000 */
+	addi x2, zero, 1024 /* 0x400 */
+	add  x2, x2,   x2   /* 0x800 */
+	add  x2, x2,   x2   /* 0x2000 */
+	add  x2, x2,   x2   /* 0x4000 */
+
+	/* zero-initialize all registers remain */
+  addi x1, zero, 0
 	addi x3, zero, 0
 	addi x4, zero, 0
 	addi x5, zero, 0
@@ -363,67 +368,8 @@ start:
 	addi x30, zero, 0
 	addi x31, zero, 0
 
-	/* running tests from riscv-tests */
-
-#ifdef ENABLE_RVTST
-#  define TEST(n) \
-	.global n; \
-	addi x1, zero, 1000; \
-	picorv32_timer_insn(zero, x1); \
-	jal zero,n; \
-	.global n ## _ret; \
-	n ## _ret:
-#else
-#  define TEST(n) \
-	.global n ## _ret; \
-	n ## _ret:
-#endif
-
-	/* set stack pointer */
-	lui sp,(64*1024)>>12
-
-	/* set gp and tp */
-	lui gp, %hi(0xdeadbeef)
-	addi gp, gp, %lo(0xdeadbeef)
-	addi tp, gp, 0
-
-	/* print "DONE\n" */
-	lui a0,0x10000000>>12
-	addi a1,zero,'D'
-	addi a2,zero,'O'
-	addi a3,zero,'N'
-	addi a4,zero,'E'
-	addi a5,zero,'\n'
-	sw a1,0(a0)
-	sw a2,0(a0)
-	sw a3,0(a0)
-	sw a4,0(a0)
-	sw a5,0(a0)
-
-	li a0, 0x20000000
-	li a1, 123456789
-	sw a1,0(a0)
+  j main
 
 	/* trap */
 	ebreak
 
-
-/* Hard mul functions for multest.c
- **********************************/
-
-//hard_mul:
-//	mul a0, a0, a1
-//	ret
-//
-//hard_mulh:
-//	mulh a0, a0, a1
-//	ret
-//
-//hard_mulhsu:
-//	mulhsu a0, a0, a1
-//	ret
-//
-//hard_mulhu:
-//	mulhu a0, a0, a1
-//	ret
-//
