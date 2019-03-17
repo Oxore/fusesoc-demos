@@ -1,19 +1,10 @@
 MEMORY
 {
-    ram (rwx) : ORIGIN = 0x00000000, LENGTH = 0x4000
+    ram (rwx) : ORIGIN = 0x00000000, LENGTH = 0x400
 }
-
-/* _reset_handler_pos = 0x0; */
 
 SECTIONS
 {
-    /*
-     * .reset_handler _reset_handler_pos : {
-     *     *(.reset_handler*)
-     * } > ram
-     *
-     * */
-
     .text : {
         start.S.o;
         *(.text*);

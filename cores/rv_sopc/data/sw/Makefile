@@ -6,7 +6,7 @@ OBJCOPY:=$(CROSSDEV)objcopy
 OBJDUMP:=$(CROSSDEV)objdump
 
 SOURCES+=main.c
-SOURCES+=irq.c
+#SOURCES+=irq.c
 SOURCES+=start.S
 OBJECTS:=$(patsubst %,%.o,$(SOURCES))
 

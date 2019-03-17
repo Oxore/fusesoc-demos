@@ -22,6 +22,17 @@ filesets:
       - bench/verilog/rv_sopc_tb.v
     file_type: verilogSource
 
+  top:
+    files:
+      - rtl/verilog/rv_sopc_top.v
+    file_type: verilogSource
+
+  quartus_files:
+    files:
+      - data/pinmap.tcl: {file_type: tclSource}
+      - data/rv_sopc.sdc: {file_type: sdcSource}
+
+
 targets:
   sim:
     default_tool: icarus
@@ -31,3 +42,12 @@ targets:
       icarus: {}
     filesets: [rtl, tb]
     toplevel: [rv_sopc_tb]
+
+  synth:
+    default_tool: quartus
+    filesets: [rtl, top, quartus_files]
+    toplevel: [rv_sopc_top]
+    tools:
+      quartus:
+        family: "Cyclone IV E"
+        device: EP4CE22F17C6

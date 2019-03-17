@@ -40,7 +40,8 @@ There are the following examples with the targets:
   - `test_div` - Run `divider.v` module tests using icarus verilog.
   - `synth` - Build and run on DE0\_Nano via Quartus.
 - `rv_sopc` - Basic RISCV sopc with gpio.
-  - `sim` - Run tests using icarus verilog. Patch `picorv32` submodule before
+  - `sim` - Run tests using icarus verilog. Patch `picorv32` submodule before.
+  - `synth` - Build and run on DE0\_Nano via Quartus.
   running (see [description](#RISC_V_SOPC)).
 
 ### Blinky
@@ -72,14 +73,19 @@ toolchain for this.
 
     make -C cores/rv_sopc/data/sw
 
-Then run `fusesoc`:
+Then run `fusesoc` simulation target:
 
     fusesoc run --target=sim rv_sopc
+
+or build with Quartus:
+
+    fusesoc build --tool=quartus rv_sopc
 
 At this point there is not much functionality.
 There is `gpio0` at base `0x9100_0000` and `ram0` at base `0x0` which is used to
 directly load a program with `$radmemh()` function.
-It is also used for stack which starts at `0x0000_4000` and grows down.
+`ram0` has size of just `1kB` to fit into FPGA I am currently using.
+It is also used for stack which starts at `0x0000_0400` and grows down.
 
 ---
 

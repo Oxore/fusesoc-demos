@@ -2,18 +2,34 @@
 module rv_sopc_tb;
    parameter div = 2;
    localparam clk_half_period = div * 5;
+   localparam irq_period = 10_000;
 
    reg         clk = 1'b1;
    reg         rst = 1'b0;
    inout [7:0] led;
+   reg         irq = 1'b0;
 
    always #clk_half_period clk <= !clk;
+
+   reg [$clog2(irq_period) - 1:0] count = 0;
+
+   always @(posedge clk) begin
+      count <= count + 1;
+      if (count == irq_period - 1) begin
+         irq <= 1;
+         count <= 0;
+      end
+      else begin
+         irq <= 0;
+      end
+   end
 
    rv_sopc
    dut (
       .clk  (clk),
       .rst  (rst),
-      .led  (led)
+      .led  (led),
+      .irq  (irq)
    );
 
    integer i;
