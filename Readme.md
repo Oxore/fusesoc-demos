@@ -87,6 +87,14 @@ directly load a program with `$radmemh()` function.
 `ram0` has size of just `1kB` to fit into FPGA I am currently using.
 It is also used for stack which starts at `0x0000_0400` and grows down.
 
+There is Wishbone bus generator based on original
+[`wb_intercon_gen`](https://github.com/olofk/wb_intercon).
+It consumes memory map via parameters specified right in a .core file it is
+invoked from. Using keys `name`, `masters` and `slaves` a Wishbone bus with
+slaves an masters can be described. See usage for more information:
+
+    fusesoc gen show wb_intercon_gen
+
 ---
 
 [Wishbone notes](Wishbone.md)

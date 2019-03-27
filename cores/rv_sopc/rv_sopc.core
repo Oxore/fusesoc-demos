@@ -12,8 +12,6 @@ filesets:
       - picorv32
     files:
       - data/sw/mem.hex: {is_include_file: true, copyto: mem.hex}
-      - rtl/verilog/bus.v
-      - rtl/verilog/bus.vh: {is_include_file: true}
       - rtl/verilog/rv_sopc.v
     file_type: verilogSource
 
@@ -32,6 +30,55 @@ filesets:
       - data/pinmap.tcl: {file_type: tclSource}
       - data/rv_sopc.sdc: {file_type: sdcSource}
 
+generators:
+  wb_intercon_gen:
+    interpreter: python
+    command: tools/wb_intercon_gen
+    description: Generate Wishbone bus
+    usage: |
+      Use the following parameters structure
+
+      parameters:
+        name: "mysoc_wb"  Wishbone bus module name
+        output: "bus.v"   Output file name. For instance if the name is `bus.v`,
+                          then `bus.v` and `bus.vh` files will be generated.
+        masters:          Specify masters
+          master0:
+            slaves:       List slaves, that master is controlling
+              - ram0
+              - gpio0
+        slaves:           Specify slaves
+          ram0:
+            datawidth: 32       Slave bus width
+            offset: 0x00000000  Slave address offset
+            size: 0x4000        Slave address space size (must be power of two)
+          gpio0:
+            datawidth: 8
+            offset: 0x91000000
+            size: 2
+
+generate:
+  wb_bus:
+    generator: wb_intercon_gen
+    position: first
+    parameters:
+      output: "bus.v"
+      name: "wb_bus"
+      masters:
+        picorv320:
+          slaves:
+            - ram0
+            - gpio0
+      slaves:
+        ram0:
+          datawidth: 32
+          offset: 0x00000000
+          size: 0x4000
+        gpio0:
+          datawidth: 8
+          offset: 0x91000000
+          size: 2
+
 
 targets:
   sim:
@@ -41,6 +88,7 @@ targets:
         verilator_options: [--trace]
       icarus: {}
     filesets: [rtl, tb]
+    generate: [wb_bus]
     toplevel: [rv_sopc_tb]
 
   synth:
