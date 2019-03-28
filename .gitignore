@@ -7,3 +7,4 @@ fusesoc.conf
 *.a
 *.so
 *.hex
+__pycache__

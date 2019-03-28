@@ -1,0 +1,85 @@
+diff --git a/TESTBENCH/modules/testcase.sv b/TESTBENCH/modules/testcase.sv
+index bec1350..f8f6f9a 100644
+--- a/TESTBENCH/modules/testcase.sv
++++ b/TESTBENCH/modules/testcase.sv
+@@ -21,7 +21,7 @@ startup_task();
+ //`include "../TESTBENCH/vectorset/down_count_mode_trigger.sv"
+ //`include "../TESTBENCH/vectorset/free_run_trigger.sv"
+ 
+-`include "../vectorset/test.sv"
++`include "../vectorset/free_run.sv"
+ 
+ `SHOWM(===========================);
+ `SHOWM(End simulation);
+diff --git a/TESTBENCH/vectorset/test.sv b/TESTBENCH/vectorset/test.sv
+deleted file mode 120000
+index 63c1afc..0000000
+--- a/TESTBENCH/vectorset/test.sv
++++ /dev/null
+@@ -1 +0,0 @@
+-/home/nxf29921/timer_test/timer/TESTBENCH/vectorset/free_run.sv
+\ No newline at end of file
+diff --git a/timer.core b/timer.core
+new file mode 100644
+index 0000000..de4d7d5
+--- /dev/null
++++ b/timer.core
+@@ -0,0 +1,58 @@
++CAPI=2:
++
++name: joselcuevam::timer:0
++description: "Timer"
++
++filesets:
++  rtl:
++    files:
++      - RTL/counter.sv
++      - RTL/d_ip_timer.sv
++      - RTL/input_block.sv
++      - RTL/output_block.sv
++      - RTL/test.sv
++      - RTL/timer_registers.sv
++    file_type: verilogSource
++
++  tb:
++    files:
++      - TESTBENCH/common/macros/messages.sv
++      - TESTBENCH/common/modules/clock_gen.sv
++      - TESTBENCH/defines/scopes.sv
++      - TESTBENCH/defines/timer_defs.sv
++      - TESTBENCH/modules/testcase.sv
++      - TESTBENCH/tasks/common_tasks.sv: {is_include_file: true}
++      - TESTBENCH/tasks/register_tasks.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/down_count_mode.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/down_count_mode_trigger.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/free_run.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/free_run_down_mode.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/free_run_trigger.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/input_ext_clk_prescaler.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/input_pulses_counter.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/up_count_match_int.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/up_count_mode.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/up_count_mode_pwm.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/up_count_overflow_int.sv: {is_include_file: true}
++      - TESTBENCH/testbench.sv
++    file_type: verilogSource
++
++targets:
++  default:
++    filesets: [rtl]
++  sim:
++    default_tool: icarus
++    filesets: [rtl, tb]
++    toplevel: [tb_counter]
++    tools:
++      icarus:
++        iverilog_options:
++          - "-I../src/joselcuevam__timer_0/TESTBENCH/modules"
++          - "-I../src/joselcuevam__timer_0/TESTBENCH/tasks"
++          - "-I../src/joselcuevam__timer_0/TESTBENCH/vectorset"
++
++#provider:
++#  name: github
++#  user: joselcuevam
++#  repo: timer
++#  version: a5b5608606a9831cec4adb26be5e551df92ef06c

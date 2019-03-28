@@ -1,3 +1,6 @@
 [submodule "cores/picorv32"]
 	path = cores/picorv32
 	url = https://github.com/cliffordwolf/picorv32
+[submodule "cores/timer"]
+	path = cores/timer
+	url = https://github.com/joselcuevam/timer.git

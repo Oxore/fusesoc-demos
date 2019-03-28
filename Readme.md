@@ -43,6 +43,11 @@ There are the following examples with the targets:
   - `sim` - Run tests using icarus verilog. Patch `picorv32` submodule before.
   - `synth` - Build and run on DE0\_Nano via Quartus.
   running (see [description](#risc-v-sopc)).
+- [`timer`](https://github.com/joselcuevam/timer) - Timer peripheral block
+  (apply patch `timer.patch` before using).
+  - `sim` - Run tests using icarus verilog. Patch `timer` submodule before.
+  Use the `git apply cores/timer.patch --directory=cores/timer` command to
+  apply the patch.
 
 ### Blinky
 
