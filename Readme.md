@@ -100,6 +100,16 @@ slaves an masters can be described. See usage for more information:
 
     fusesoc gen show wb_intercon_gen
 
+
+# TODO
+
+- Timer
+  - [x] Add .core file
+  - [ ] Add wishbone wrapper
+  - [ ] Add tests for wishbone wrapper
+- RISCV SoPC
+  - [ ] Integrate `timer` to `rv_sopc`
+  - [ ] Add software examples for timer on `rv_sopc`
 ---
 
 [Wishbone notes](Wishbone.md)

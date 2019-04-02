@@ -1,3 +1,68 @@
+diff --git a/RTL/d_ip_timer_wb.sv b/RTL/d_ip_timer_wb.sv
+new file mode 100644
+index 0000000..02b43f1
+--- /dev/null
++++ b/RTL/d_ip_timer_wb.sv
+@@ -0,0 +1,59 @@
++/*
++ * Wishbone wrapper for d_ip_timer
++ *
++ */
++module d_ip_timer_wb (
++   input             wb_clk,
++   input             wb_rst,
++
++   input       [5:0] wb_adr_i,
++   input       [7:0] wb_dat_i,
++   input             wb_we_i,
++   input             wb_cyc_i,
++   input             wb_stb_i,
++   input       [2:0] wb_cti_i,
++   input       [1:0] wb_bte_i,
++   output      [7:0] wb_dat_o,
++   output reg        wb_ack_o,
++   output            wb_err_o,
++   output            wb_rty_o,
++
++   /* Timer specific outputs */
++   input             mod_en,
++   input             timer_in,
++   output            timer_out,
++   output            trigger,
++   output            overflow_int,
++   output            comp_1_match_int,
++   output            comp_0_match_int
++);
++
++assign wb_err_o = 0;
++assign wb_rty_o = 0;
++
++// Ack generation
++always @(posedge wb_clk)
++   if (wb_rst)
++      wb_ack_o <= 0;
++   else if (wb_ack_o)
++      wb_ack_o <= 0;
++   else if (wb_cyc_i & wb_stb_i & !wb_ack_o)
++      wb_ack_o <= 1;
++
++d_ip_timer d_ip_timer_instance (
++  /* input */  .clk(wb_clk),
++  /* input */  .rst_b(~wb_rst),
++  /* input */  .addr(wb_adr_i),
++  /* input */  .wr_en(wb_cyc_i & wb_stb_i & wb_we_i),
++  /* input */  .mod_en(mod_en),
++  /* input */  .timer_in(timer_in),
++  /* input */  .wdata(wb_dat_i),
++  /* output */ .rdata(wb_dat_o),
++  /* output */ .timer_out(timer_out),
++  /* output */ .trigger(trigger),
++  /* output */ .overflow_int(overflow_int),
++  /* output */ .comp_1_match_int(comp_1_match_int),
++  /* output */ .comp_0_match_int(comp_0_match_int)
++);
++
++endmodule
 diff --git a/TESTBENCH/modules/testcase.sv b/TESTBENCH/modules/testcase.sv
 index bec1350..f8f6f9a 100644
 --- a/TESTBENCH/modules/testcase.sv
@@ -11,6 +76,92 @@ index bec1350..f8f6f9a 100644
  
  `SHOWM(===========================);
  `SHOWM(End simulation);
+diff --git a/TESTBENCH/testbench_wb/testbench_wb.sv b/TESTBENCH/testbench_wb/testbench_wb.sv
+new file mode 100644
+index 0000000..79af1d0
+--- /dev/null
++++ b/TESTBENCH/testbench_wb/testbench_wb.sv
+@@ -0,0 +1,80 @@
++/*
++ * testbench for d_ip_timer's Wishbone wrapper
++ *
++ * */
++
++module testbench_wb();
++`define TB_SCOPE testbench_wb
++
++reg   [5:0] address;
++reg   [7:0] write_data;
++wire  [7:0] read_data;
++reg         module_en;
++reg         write_en;
++reg         rst;
++
++wire        overflow_int;
++wire        match0_int;
++wire        match1_int;
++wire        timer_out;
++wire        clk_ext;
++wire        trigger;
++
++localparam CLK_HALF_PERIOD = 5;
++
++// Simulator control
++initial
++begin
++  $dumpfile("dump.vcd"); $dumpvars;
++  $display("Starting simulation...");
++  #90000;
++  $finish;
++end
++
++//tasks
++`include "register_tasks.sv"
++`include "common_tasks.sv"
++
++wire [7:0] reg_read_data;
++
++assign reg_read_data = `TB_SCOPE.read_data;
++
++// clock
++
++reg   clk;
++
++testcase testcase ();
++
++always #CLK_HALF_PERIOD clk <= !clk;
++
++// pulses
++reg [15:0] random_val;
++reg        pulses;
++
++initial
++begin
++  pulses =0;
++  while (1)
++  begin
++    random_val=$urandom%100;
++    repeat(random_val + 20) begin @ (posedge clk);  end
++    pulses = ~pulses;
++  end
++end
++
++d_ip_timer_wb d_ip_timer_wb (
++  .wb_clk            (clk),
++  .wb_rst            (!rst),
++  .wb_adr_i          (address),
++  .wb_we_i           (write_en),
++  .mod_en            (module_en),
++  .wb_dat_o          (read_data),
++  .wb_dat_i          (write_data),
++  .overflow_int      (overflow_int),
++  .comp_0_match_int  (match0_int),
++  .comp_1_match_int  (match1_int),
++  .timer_out         (timer_out),
++  .timer_in          (clk_ext)
++);
++
++endmodule
 diff --git a/TESTBENCH/vectorset/test.sv b/TESTBENCH/vectorset/test.sv
 deleted file mode 120000
 index 63c1afc..0000000
@@ -21,10 +172,10 @@ index 63c1afc..0000000
 \ No newline at end of file
 diff --git a/timer.core b/timer.core
 new file mode 100644
-index 0000000..de4d7d5
+index 0000000..66c4691
 --- /dev/null
 +++ b/timer.core
-@@ -0,0 +1,58 @@
+@@ -0,0 +1,79 @@
 +CAPI=2:
 +
 +name: joselcuevam::timer:0
@@ -35,6 +186,7 @@ index 0000000..de4d7d5
 +    files:
 +      - RTL/counter.sv
 +      - RTL/d_ip_timer.sv
++      - RTL/d_ip_timer_wb.sv
 +      - RTL/input_block.sv
 +      - RTL/output_block.sv
 +      - RTL/test.sv
@@ -45,7 +197,6 @@ index 0000000..de4d7d5
 +    files:
 +      - TESTBENCH/common/macros/messages.sv
 +      - TESTBENCH/common/modules/clock_gen.sv
-+      - TESTBENCH/defines/scopes.sv
 +      - TESTBENCH/defines/timer_defs.sv
 +      - TESTBENCH/modules/testcase.sv
 +      - TESTBENCH/tasks/common_tasks.sv: {is_include_file: true}
@@ -64,6 +215,18 @@ index 0000000..de4d7d5
 +      - TESTBENCH/testbench.sv
 +    file_type: verilogSource
 +
++  testbench_wb:
++    files:
++      - TESTBENCH/common/macros/messages.sv
++      - TESTBENCH/defines/scopes.sv
++      - TESTBENCH/defines/timer_defs.sv
++      - TESTBENCH/modules/testcase.sv
++      - TESTBENCH/tasks/common_tasks.sv: {is_include_file: true}
++      - TESTBENCH/tasks/register_tasks.sv: {is_include_file: true}
++      - TESTBENCH/vectorset/free_run.sv: {is_include_file: true}
++      - TESTBENCH/testbench_wb/testbench_wb.sv
++    file_type: verilogSource
++
 +targets:
 +  default:
 +    filesets: [rtl]
@@ -74,9 +237,18 @@ index 0000000..de4d7d5
 +    tools:
 +      icarus:
 +        iverilog_options:
-+          - "-I../src/joselcuevam__timer_0/TESTBENCH/modules"
-+          - "-I../src/joselcuevam__timer_0/TESTBENCH/tasks"
-+          - "-I../src/joselcuevam__timer_0/TESTBENCH/vectorset"
++          - "-I../src/$(TARGET)/TESTBENCH/modules"
++          - "-I../src/$(TARGET)/TESTBENCH/tasks"
++          - "-I../src/$(TARGET)/TESTBENCH/vectorset"
++
++  test_wb:
++    default_tool: icarus
++    filesets: [rtl, testbench_wb]
++    toplevel: [testbench_wb]
++    tools:
++      icarus:
++        iverilog_options:
++          - "-I../src/$(TARGET)/TESTBENCH/tasks"
 +
 +#provider:
 +#  name: github
