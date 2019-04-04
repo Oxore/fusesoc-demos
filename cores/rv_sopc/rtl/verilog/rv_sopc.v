@@ -10,6 +10,7 @@ module rv_sopc #(
 
 wire wb_clk;
 wire wb_rst;
+wire tim_irq;
 
 assign wb_clk = clk;
 assign wb_rst = rst;
@@ -28,7 +29,7 @@ picorv32_wb #(
 picorv320 (
    .wb_clk_i   (wb_clk),
    .wb_rst_i   (wb_rst),
-   .irq        ({27'h0, irq, 4'b000}),
+   .irq        ({26'h0, tim_irq, irq, 4'b000}),
 
    .wbm_adr_o  (wb_m2s_picorv320_adr),
    .wbm_dat_o  (wb_m2s_picorv320_dat),
@@ -55,6 +56,23 @@ gpio gpio0 (
    .wb_err_o   (wb_s2m_gpio0_err),
    .wb_rty_o   (wb_s2m_gpio0_rty),
    .gpio_o     (led)
+);
+
+d_ip_timer_wb timer0 (
+   .wb_clk        (wb_clk),
+   .wb_rst        (wb_rst),
+   .wb_adr_i      (wb_m2s_timer0_adr[5:0]),
+   .wb_dat_i      (wb_m2s_timer0_dat),
+   .wb_we_i       (wb_m2s_timer0_we),
+   .wb_cyc_i      (wb_m2s_timer0_cyc),
+   .wb_stb_i      (wb_m2s_timer0_stb),
+   .wb_cti_i      (wb_m2s_timer0_cti),
+   .wb_bte_i      (wb_m2s_timer0_bte),
+   .wb_dat_o      (wb_s2m_timer0_dat),
+   .wb_ack_o      (wb_s2m_timer0_ack),
+   .wb_err_o      (wb_s2m_timer0_err),
+   .wb_rty_o      (wb_s2m_timer0_rty),
+   .overflow_int  (tim_irq)
 );
 
 wb_ram #(

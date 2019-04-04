@@ -105,11 +105,15 @@ slaves an masters can be described. See usage for more information:
 
 - Timer
   - [x] Add .core file
-  - [ ] Add wishbone wrapper
-  - [ ] Add tests for wishbone wrapper
+  - [x] Add wishbone wrapper
+  - [x] Add tests for wishbone wrapper
 - RISCV SoPC
-  - [ ] Integrate `timer` to `rv_sopc`
+  - [ ] Integrate `timer` into `rv_sopc` (requres little endian `wb_intercon`)
   - [ ] Add software examples for timer on `rv_sopc`
+- Wishbone `wb_intercon`
+  - [ ] Implement endianness customization and push to upstream.
+  - [ ] Implement 16 bits slaves and push to upstream.
+  - [ ] Implement `wb_intercon` generator for pushing to upstream.
 ---
 
 [Wishbone notes](Wishbone.md)

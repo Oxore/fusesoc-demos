@@ -10,6 +10,7 @@ filesets:
       - wb_ram
       - wb_intercon
       - picorv32
+      - joselcuevam::timer
     files:
       - data/sw/mem.hex: {is_include_file: true, copyto: mem.hex}
       - rtl/verilog/rv_sopc.v
@@ -69,6 +70,7 @@ generate:
           slaves:
             - ram0
             - gpio0
+            - timer0
       slaves:
         ram0:
           datawidth: 32
@@ -78,6 +80,10 @@ generate:
           datawidth: 8
           offset: 0x91000000
           size: 2
+        timer0:
+          datawidth: 8
+          offset: 0x91001000
+          size: 0x10
 
 
 targets:
