@@ -1,0 +1,31 @@
+CAPI=2:
+
+name: ::wb_intercon_gen_ng:0
+description: CAPI=2 .core file description based Wishbone Interconnect generator
+
+generators:
+  wb_intercon_gen_ng:
+    interpreter: python
+    command: tools/wb_intercon_gen
+    description: CAPI=2 .core file description based Wishbone Interconnect generator
+    usage: |
+      Use the following parameters structure
+
+      parameters:
+        name: "mysoc_wb"  Wishbone bus module name
+        output: "bus.v"   Output file name. For instance if the name is `bus.v`,
+                          then `bus.v` and `bus.vh` files will be generated.
+        masters:          Specify masters
+          master0:
+            slaves:       List slaves, that master is controlling
+              - ram0
+              - gpio0
+        slaves:           Specify slaves
+          ram0:
+            datawidth: 32       Slave bus width
+            offset: 0x00000000  Slave address offset
+            size: 0x4000        Slave address space size (must be power of two)
+          gpio0:
+            datawidth: 8
+            offset: 0x91000000
+            size: 2
