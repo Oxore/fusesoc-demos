@@ -29,3 +29,4 @@ generators:
             datawidth: 8
             offset: 0x91000000
             size: 2
+            litleendian: 1      Specify endianness (0 = big, 1 = little)

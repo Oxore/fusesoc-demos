@@ -3,6 +3,7 @@ fusesoc.conf
 *.vim
 *.elf
 *.o
+*.d
 *.bin
 *.a
 *.so

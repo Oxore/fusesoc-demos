@@ -134,6 +134,7 @@ class Slave:
         self.offset = 0
         self.size = 0
         self.mask = 0
+        self.littleendian = 0
         self.bus_type = 'wishbone'
         if d:
             self.load_dict(d)
@@ -153,6 +154,8 @@ class Slave:
                         "Bus type '%s' is not known. Valid buses are: %s" % (
                         value, ', '.join(VALID_BUS_TYPES)))
                 self.bus_type = value
+            elif key == 'littleendian':
+                self.littleendian = value
             else:
                 raise UnknownPropertyError(
                     "Unknown property '%s' in slave section '%s'" % (
@@ -294,6 +297,7 @@ class WbIntercon:
         parameters = [Parameter('aw', 32)]
         parameters += [Parameter('mdw', 32)]
         parameters += [Parameter('sdw', slave.datawidth)]
+        parameters += [Parameter('littleendian', slave.littleendian)]
         s = slave.name
 
         ports =[]
@@ -502,10 +506,10 @@ class WbInterconGenerator(Generator):
         name = self.config.get("name", "wb_intercon")
 
         try:
-          g = WbIntercon(name, self.config)
-          g.write(output)
+            g = WbIntercon(name, self.config)
+            g.write(output)
         except Error as e:
-          print("Error: %s" % e)
+            print("Error: %s" % e)
 
         self.add_files(
                 [

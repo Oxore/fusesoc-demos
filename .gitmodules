@@ -4,3 +4,9 @@
 [submodule "cores/timer"]
 	path = cores/timer
 	url = https://github.com/joselcuevam/timer.git
+[submodule "cores/wb_intercon"]
+	path = cores/wb_intercon
+	url = https://github.com/olofk/wb_intercon
+[submodule "cores/wb_ram"]
+	path = cores/wb_ram
+	url = https://github.com/fusesoc/wb_ram.git
