@@ -1,9 +1,9 @@
 diff --git a/RTL/d_ip_timer_wb.sv b/RTL/d_ip_timer_wb.sv
 new file mode 100644
-index 0000000..02b43f1
+index 0000000..59a18b7
 --- /dev/null
 +++ b/RTL/d_ip_timer_wb.sv
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,58 @@
 +/*
 + * Wishbone wrapper for d_ip_timer
 + *
@@ -25,7 +25,6 @@ index 0000000..02b43f1
 +   output            wb_rty_o,
 +
 +   /* Timer specific outputs */
-+   input             mod_en,
 +   input             timer_in,
 +   output            timer_out,
 +   output            trigger,
@@ -51,7 +50,7 @@ index 0000000..02b43f1
 +  /* input */  .rst_b(~wb_rst),
 +  /* input */  .addr(wb_adr_i),
 +  /* input */  .wr_en(wb_cyc_i & wb_stb_i & wb_we_i),
-+  /* input */  .mod_en(mod_en),
++  /* input */  .mod_en(1'b1),
 +  /* input */  .timer_in(timer_in),
 +  /* input */  .wdata(wb_dat_i),
 +  /* output */ .rdata(wb_dat_o),

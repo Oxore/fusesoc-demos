@@ -1,5 +1,5 @@
 module rv_sopc #(
-   parameter ROM_DEPTH = 'h400
+   parameter ROM_DEPTH = 'h1000
 )
 (
    input          clk,
@@ -24,12 +24,14 @@ picorv32_wb #(
    .ENABLE_MUL(1),
    .ENABLE_DIV(1),
    .ENABLE_IRQ(1),
-   .ENABLE_TRACE(1)
+   .ENABLE_TRACE(1),
+   .ENABLE_REGS_16_31(1),
+   .ENABLE_IRQ_QREGS(0)
 )
 picorv320 (
    .wb_clk_i   (wb_clk),
    .wb_rst_i   (wb_rst),
-   .irq        ({26'h0, tim_irq, irq, 4'b000}),
+   .irq        ({26'h0, tim_irq, irq, 4'b0000}),
 
    .wbm_adr_o  (wb_m2s_picorv320_adr),
    .wbm_dat_o  (wb_m2s_picorv320_dat),
@@ -72,6 +74,8 @@ d_ip_timer_wb timer0 (
    .wb_ack_o      (wb_s2m_timer0_ack),
    .wb_err_o      (wb_s2m_timer0_err),
    .wb_rty_o      (wb_s2m_timer0_rty),
+
+   .timer_in      (clk),
    .overflow_int  (tim_irq)
 );
 

@@ -6,18 +6,22 @@ OBJCOPY:=$(CROSSDEV)objcopy
 OBJDUMP:=$(CROSSDEV)objdump
 
 SOURCES+=main.c
-#SOURCES+=irq.c
+SOURCES+=irq.c
 SOURCES+=start.S
 OBJECTS:=$(patsubst %,%.o,$(SOURCES))
+OBJDEPS:=$(patsubst %.o,%.d,$(OBJECTS))
 
 LDFLAGS+=-Tmain.ld
 
 CFLAGS+=-g
+CFLAGS+=-Os
+CFLAGS+=-MD
 
 MAIN=main
 
 MEM=mem.hex
 
+.PHONY: all
 all: $(MAIN).elf
 all: $(MAIN).bin
 all: mem.hex
@@ -46,7 +50,13 @@ $(MAIN).bin: $(MAIN).elf
 	@echo -e "  CC      $@"
 	$(Q) $(CC) -c $< -o $@ $(CFLAGS)
 
-clean:
-	@rm -rfv $(OBJECTS) $(MAIN).elf $(MAIN).bin $(MEM)
-
 .PHONY: clean
+clean:
+	@rm -rfv \
+		$(OBJECTS) \
+		$(OBJDEPS) \
+		$(MAIN).elf \
+		$(MAIN).bin \
+		$(MEM)
+
+-include $(OBJDEPS)

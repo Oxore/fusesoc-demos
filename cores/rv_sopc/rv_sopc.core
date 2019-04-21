@@ -49,7 +49,7 @@ generate:
         ram0:
           datawidth: 32
           offset: 0x00000000
-          size: 0x4000
+          size: 0x1000
         gpio0:
           datawidth: 8
           offset: 0x91000000
