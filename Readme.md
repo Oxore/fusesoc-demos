@@ -67,10 +67,13 @@ You can see the two lights running from side to side on an LED array.
 
 ### RISC V SOPC
 
-Before running this target you need to apply patch to `picorv32` submodule with
-following command (assuming you are at the root directory of this repo):
+Before running this target you need to apply patches to submodules with
+following commands (assuming you are at the root directory of this repo):
 
     git apply cores/picorv32.patch --directory=cores/picorv32
+    git apply cores/timer.patch --directory=cores/timer
+    git apply cores/wb_intercon.patch --directory=cores/wb_intercon
+    git apply cores/wb_ram.patch --directory=cores/wb_ram
 
 Then you should build the program for this SOC.
 You need [`riscv32-unknown-elf`](https://github.com/riscv/riscv-gnu-toolchain)
@@ -82,7 +85,8 @@ Then run `fusesoc` simulation target:
 
     fusesoc run --target=sim rv_sopc
 
-or build with Quartus:
+or build with Quartus (actually does not work because of timer but I have no
+time to deal with it):
 
     fusesoc build --tool=quartus rv_sopc
 
@@ -108,8 +112,8 @@ slaves an masters can be described. See usage for more information:
   - [x] Add wishbone wrapper
   - [x] Add tests for wishbone wrapper
 - RISCV SoPC
-  - [ ] Integrate `timer` into `rv_sopc` (requres little endian `wb_intercon`)
-  - [ ] Add software examples for timer on `rv_sopc`
+  - [x] Integrate `timer` into `rv_sopc` (requres little endian `wb_intercon`)
+  - [x] Add software examples for timer on `rv_sopc`
 - Wishbone `wb_intercon`
   - [ ] Implement endianness customization and push to upstream.
   - [ ] Implement 16 bits slaves and push to upstream.
